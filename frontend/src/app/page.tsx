@@ -15,6 +15,14 @@ export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const getApiUrl = () => {
+    if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
+    if (typeof window !== "undefined") {
+      return `http://${window.location.hostname}:8000`;
+    }
+    return "http://127.0.0.1:8000";
+  };
+
   const handleCreateRoom = async (isSolo: boolean = false) => {
     if (!playerName.trim()) {
       setErrorMsg("Please enter your Tycoon name.");
@@ -24,7 +32,7 @@ export default function LandingPage() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/rooms/create", {
+      const res = await fetch(`${getApiUrl()}/api/rooms/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,7 +72,7 @@ export default function LandingPage() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/rooms/join", {
+      const res = await fetch(`${getApiUrl()}/api/rooms/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

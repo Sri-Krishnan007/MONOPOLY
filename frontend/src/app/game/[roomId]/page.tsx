@@ -36,7 +36,19 @@ export default function GameRoomPage() {
   useEffect(() => {
     if (!roomId || !playerId) return;
 
-    const wsUrl = `ws://${window.location.hostname}:8000/ws/${roomId}/${playerId}`;
+    let wsUrl = "";
+    if (process.env.NEXT_PUBLIC_WS_URL) {
+      const baseWs = process.env.NEXT_PUBLIC_WS_URL.replace(/\/$/, "");
+      wsUrl = `${baseWs}/ws/${roomId}/${playerId}`;
+    } else if (process.env.NEXT_PUBLIC_API_URL) {
+      const baseHttp = process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "");
+      const baseWs = baseHttp.replace(/^http/, "ws");
+      wsUrl = `${baseWs}/ws/${roomId}/${playerId}`;
+    } else {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      wsUrl = `${protocol}//${window.location.hostname}:8000/ws/${roomId}/${playerId}`;
+    }
+
     const ws = new WebSocket(wsUrl);
     socketRef.current = ws;
 
