@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { AuctionState, Player } from "@/lib/types";
 import { BOARD_SPACES } from "@/lib/boardData";
-import { Hammer, Clock, ArrowUpCircle, Check } from "lucide-react";
+import { Hammer, Clock, ArrowUpCircle } from "lucide-react";
 
 interface AuctionModalProps {
   auction: AuctionState;
@@ -44,33 +44,31 @@ export const AuctionModal: React.FC<AuctionModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
       <div className="relative w-full max-w-lg p-6 bg-slate-900 border-2 border-amber-500/80 rounded-3xl shadow-2xl text-center select-none">
-        {/* Auction Header */}
         <div className="flex items-center justify-center gap-2 mb-2 text-amber-400">
           <Hammer className="w-6 h-6 animate-bounce" />
-          <h2 className="text-xl font-black tracking-wider uppercase">
-            PUBLIC REAL ESTATE AUCTION (सार्वजनिक नीलामी)
+          <h2 className="text-lg sm:text-xl font-black tracking-wider uppercase">
+            PUBLIC PROPERTY AUCTION
           </h2>
         </div>
 
-        {/* Property Being Auctioned */}
         <div className="my-4 p-4 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col items-center">
-          <span className="text-xs font-bold text-amber-500 uppercase tracking-widest">
-            {space.city}, {space.state}
+          <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
+            {space.monument} • {space.city}, {space.state}
           </span>
           <h3 className="text-2xl font-black text-slate-100">{space.name}</h3>
-          <p className="text-sm font-semibold text-amber-400/90">{space.hindi_name}</p>
-          <span className="text-xs text-slate-400 mt-1">Bank List Price: ₹{space.price.toLocaleString("en-IN")}</span>
+          <span className="text-xs text-slate-400 mt-1">
+            Bank List Value: ₹{space.price.toLocaleString("en-IN")}
+          </span>
         </div>
 
-        {/* Current Highest Bid & Timer */}
         <div className="grid grid-cols-2 gap-3 my-4">
           <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-            <span className="text-xs text-slate-400 block mb-1">Current High Bid</span>
+            <span className="text-xs text-slate-400 block mb-1">Highest Bid</span>
             <span className="text-2xl font-black text-emerald-400">
               ₹{auction.current_bid.toLocaleString("en-IN")}
             </span>
-            <span className="text-[11px] text-amber-300 block truncate mt-0.5">
-              By: {highestBidder?.name || "Starting Call"}
+            <span className="text-[11px] text-amber-300 block truncate mt-0.5 font-semibold">
+              Bidder: {highestBidder?.name || "Opening Bid"}
             </span>
           </div>
 
@@ -85,9 +83,8 @@ export const AuctionModal: React.FC<AuctionModalProps> = ({
           </div>
         </div>
 
-        {/* Quick Bidding Controls */}
         <div className="flex flex-col gap-2 mt-4">
-          <span className="text-xs font-semibold text-slate-300">Raise the Bid (बोली लगाएं):</span>
+          <span className="text-xs font-semibold text-slate-300">Raise the Bid:</span>
           <div className="grid grid-cols-3 gap-2">
             {[100, 500, 1000].map((increment) => {
               const nextBid = auction.current_bid + increment;

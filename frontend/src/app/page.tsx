@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PLAYER_TOKENS } from "@/lib/boardData";
 import { sounds } from "@/lib/sounds";
-import { Crown, Play, Users, Bot, Sparkles, Building2, Shield, Flame, BookOpen } from "lucide-react";
+import { Crown, Users, Bot, Sparkles, Building2, Shield, Landmark } from "lucide-react";
 
 export default function LandingPage() {
   const router = useRouter();
 
-  const [playerName, setPlayerName] = useState("Raja Tycoon");
+  const [playerName, setPlayerName] = useState("Player 1");
   const [selectedToken, setSelectedToken] = useState(PLAYER_TOKENS[0].id);
   const [roomCode, setRoomCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function LandingPage() {
 
   const handleCreateRoom = async (isSolo: boolean = false) => {
     if (!playerName.trim()) {
-      setErrorMsg("Please enter your Tycoon name.");
+      setErrorMsg("Please enter your player name.");
       return;
     }
     setIsLoading(true);
@@ -46,22 +46,20 @@ export default function LandingPage() {
 
       sounds.playCashChime();
 
-      // If solo mode, immediately add 3 AI bots and start!
       if (isSolo) {
-        // We will navigate directly and lobby will let user add bots or start
         router.push(`/game/${data.room_id}?playerId=${data.host_id}&solo=true`);
       } else {
         router.push(`/game/${data.room_id}?playerId=${data.host_id}`);
       }
     } catch (err: unknown) {
-      setErrorMsg("Could not connect to FastAPI backend server (http://127.0.0.1:8000). Make sure backend is running.");
+      setErrorMsg("Could not connect to backend server. Make sure the FastAPI backend is running.");
       setIsLoading(false);
     }
   };
 
   const handleJoinRoom = async () => {
     if (!playerName.trim()) {
-      setErrorMsg("Please enter your Tycoon name.");
+      setErrorMsg("Please enter your player name.");
       return;
     }
     if (!roomCode.trim()) {
@@ -96,49 +94,45 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950 text-slate-100 flex flex-col justify-between p-4 sm:p-8 select-none">
-      {/* Top Header */}
-      <header className="max-w-4xl mx-auto text-center pt-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40 text-slate-100 flex flex-col justify-between p-4 sm:p-8 select-none">
+      <header className="max-w-4xl mx-auto text-center pt-2">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-widest uppercase mb-3">
-          <Sparkles className="w-3.5 h-3.5" /> Next.js & FastAPI Indian Monopoly Edition
+          <Sparkles className="w-3.5 h-3.5" /> Next.js & FastAPI Indian Monopoly
         </div>
         <h1 className="text-4xl sm:text-6xl font-black tracking-widest uppercase bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent drop-shadow-md">
-          KUBER
+          INDIAN MONOPOLY
         </h1>
-        <p className="text-base sm:text-xl font-bold text-amber-400/90 mt-1">
-          THE GREAT INDIAN PROPERTY EMPIRE • भारत का कुबेर
+        <p className="text-base sm:text-lg font-bold text-amber-400/90 mt-1">
+          CITIES & MONUMENTS EDITION
         </p>
         <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mt-2">
-          Conquer iconic Indian commercial hubs from Chandni Chowk to Marine Drive, build Bhavans & Mahals, and build an immortal financial empire.
+          Trade iconic Indian landmarks from Red Fort in Old Delhi to Marine Drive in Mumbai, build houses and luxury hotels, and conquer the board!
         </p>
       </header>
 
-      {/* Main Game Setup Card */}
-      <main className="max-w-2xl mx-auto w-full my-8 p-6 sm:p-8 bg-slate-900/90 border-2 border-amber-500/80 rounded-3xl shadow-2xl backdrop-blur-md">
+      <main className="max-w-2xl mx-auto w-full my-6 p-6 sm:p-8 bg-slate-900/90 border-2 border-amber-500/80 rounded-3xl shadow-2xl backdrop-blur-md">
         {errorMsg && (
           <div className="mb-6 p-3 bg-red-950/80 border border-red-500 text-red-200 text-xs rounded-xl font-medium text-center animate-pulse">
             {errorMsg}
           </div>
         )}
 
-        {/* Player Name Input */}
-        <div className="mb-6">
+        <div className="mb-5">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-            Your Tycoon Name (आपका नाम):
+            Player Name:
           </label>
           <input
             type="text"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            placeholder="e.g. Mukesh Tycoon"
+            placeholder="e.g. Vikram Sharma"
             className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 font-bold text-sm focus:outline-none focus:border-amber-400 transition-colors shadow-inner"
           />
         </div>
 
-        {/* Bespoke Token Selector */}
         <div className="mb-6">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-            Choose Your Metallic Token (शाही मोहरा चुनें):
+            Select Your Metallic Token:
           </label>
           <div className="grid grid-cols-4 gap-2 sm:gap-3">
             {PLAYER_TOKENS.map((token) => {
@@ -147,7 +141,7 @@ export default function LandingPage() {
                 <button
                   key={token.id}
                   onClick={() => setSelectedToken(token.id)}
-                  className={`p-3 rounded-2xl border flex flex-col items-center justify-center transition-all ${
+                  className={`p-2.5 rounded-2xl border flex flex-col items-center justify-center transition-all ${
                     isSelected
                       ? "bg-amber-500/20 border-amber-400 ring-2 ring-amber-400/50 scale-105 shadow-lg shadow-amber-500/10"
                       : "bg-slate-950/60 border-slate-800 hover:border-slate-700 opacity-70 hover:opacity-100"
@@ -164,27 +158,23 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col gap-3">
-          {/* Solo Play */}
           <button
             onClick={() => handleCreateRoom(true)}
             disabled={isLoading}
             className="w-full py-3.5 px-6 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm rounded-xl shadow-xl shadow-amber-500/20 transform active:scale-95 transition-all flex items-center justify-center gap-2"
           >
-            <Bot className="w-5 h-5" /> PLAY VS INDIAN AI TYCOONS (एकल खेल)
+            <Bot className="w-5 h-5" /> PLAY VS AI BOTS (SINGLE PLAYER)
           </button>
 
-          {/* Multiplayer Host */}
           <button
             onClick={() => handleCreateRoom(false)}
             disabled={isLoading}
             className="w-full py-3 px-6 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs rounded-xl border border-amber-500/40 transition-all flex items-center justify-center gap-2"
           >
-            <Crown className="w-4 h-4" /> Host Multiplayer Empire Room (नया कमरा बनाएं)
+            <Crown className="w-4 h-4" /> Host Multiplayer Room
           </button>
 
-          {/* Join Existing Room */}
           <div className="flex gap-2 mt-2 pt-4 border-t border-slate-800">
             <input
               type="text"
@@ -204,27 +194,26 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Feature Highlights Footer */}
       <footer className="max-w-4xl mx-auto w-full grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs pb-4">
-        <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
-          <Building2 className="w-5 h-5 mx-auto text-amber-400 mb-1" />
-          <span className="font-bold text-slate-200 block">22 Indian Cities</span>
-          <span className="text-[10px] text-slate-500">8 Property Color Groups</span>
+        <div className="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800">
+          <Landmark className="w-4 h-4 mx-auto text-amber-400 mb-1" />
+          <span className="font-bold text-slate-200 block text-xs">22 Indian Cities</span>
+          <span className="text-[10px] text-slate-500">Historic Monuments</span>
         </div>
-        <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
-          <Crown className="w-5 h-5 mx-auto text-yellow-400 mb-1" />
-          <span className="font-bold text-slate-200 block">₹15,000 Economy</span>
-          <span className="text-[10px] text-slate-500">Calibrated Mathematical Balance</span>
+        <div className="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800">
+          <Crown className="w-4 h-4 mx-auto text-yellow-400 mb-1" />
+          <span className="font-bold text-slate-200 block text-xs">₹15,000 Economy</span>
+          <span className="text-[10px] text-slate-500">Official Hasbro Balance</span>
         </div>
-        <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
-          <Shield className="w-5 h-5 mx-auto text-sky-400 mb-1" />
-          <span className="font-bold text-slate-200 block">Bhavans & Mahals</span>
-          <span className="text-[10px] text-slate-500">Authentic Indian Architecture</span>
+        <div className="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800">
+          <Building2 className="w-4 h-4 mx-auto text-emerald-400 mb-1" />
+          <span className="font-bold text-slate-200 block text-xs">Houses & Hotels</span>
+          <span className="text-[10px] text-slate-500">Uniform Building Rules</span>
         </div>
-        <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
-          <Flame className="w-5 h-5 mx-auto text-rose-400 mb-1" />
-          <span className="font-bold text-slate-200 block">Kismat & Panchayat</span>
-          <span className="text-[10px] text-slate-500">32 Bespoke Event Decks</span>
+        <div className="p-2.5 bg-slate-900/60 rounded-xl border border-slate-800">
+          <Shield className="w-4 h-4 mx-auto text-sky-400 mb-1" />
+          <span className="font-bold text-slate-200 block text-xs">Chance & Community</span>
+          <span className="text-[10px] text-slate-500">32 Event Cards</span>
         </div>
       </footer>
     </div>

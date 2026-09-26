@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { GameState, PropertyOwnership } from "@/lib/types";
+import React from "react";
+import { GameState } from "@/lib/types";
 import { BOARD_SPACES, COLOR_GROUP_STYLES } from "@/lib/boardData";
 import { sounds } from "@/lib/sounds";
-import { X, Building, Home, Landmark, AlertCircle, Plus, Minus, ArrowUp } from "lucide-react";
+import { X, Building, AlertCircle, Plus, ArrowUp } from "lucide-react";
 
 interface PortfolioModalProps {
   game: GameState;
@@ -31,9 +31,8 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-2xl max-h-[85vh] flex flex-col p-6 bg-slate-900 border-2 border-amber-500/80 rounded-3xl shadow-2xl text-slate-100 select-none overflow-hidden">
-        {/* Close Button */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in select-none">
+      <div className="relative w-full max-w-2xl max-h-[85vh] flex flex-col p-6 bg-slate-900 border-2 border-amber-500/80 rounded-3xl shadow-2xl text-slate-100 overflow-hidden">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1.5 rounded-full bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-all"
@@ -41,29 +40,27 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
         <div className="pb-3 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <Building className="w-6 h-6 text-amber-400" />
             <h2 className="text-xl font-black text-slate-100">
-              REAL ESTATE PORTFOLIO & CONSTRUCTION (संपत्ति प्रबंधन)
+              REAL ESTATE PORTFOLIO & DEVELOPMENT
             </h2>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Build Bhavans, upgrade to Mahals, or leverage mortgage credit with the Bank.
+            Build Houses, upgrade to Hotels, or leverage mortgage credit with the Bank.
           </p>
           <div className="flex items-center justify-between mt-2 p-2 bg-slate-950 rounded-xl border border-slate-800 text-xs">
             <span>
-              Available Cash: <strong className="text-emerald-400">₹{(me?.cash || 0).toLocaleString("en-IN")}</strong>
+              Cash Reserves: <strong className="text-emerald-400">₹{(me?.cash || 0).toLocaleString("en-IN")}</strong>
             </span>
             <span>
-              Bank Supply: <strong className="text-emerald-400">{game.bank_bhavans} Bhavans</strong> /{" "}
-              <strong className="text-rose-400">{game.bank_mahals} Mahals</strong>
+              Bank Supply: <strong className="text-emerald-400">{game.bank_houses} Houses</strong> /{" "}
+              <strong className="text-rose-400">{game.bank_hotels} Hotels</strong>
             </span>
           </div>
         </div>
 
-        {/* Property List */}
         <div className="flex-grow overflow-y-auto my-4 space-y-3 pr-1">
           {myProperties.length === 0 ? (
             <div className="text-center py-12 text-slate-400">
@@ -82,7 +79,6 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
                   key={prop.space_id}
                   className="p-3 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
                 >
-                  {/* Property Details */}
                   <div className="flex items-center gap-3">
                     {colorStyle && (
                       <div className={`w-3.5 h-12 rounded-lg ${colorStyle.bg}`} />
@@ -96,13 +92,13 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-amber-400/80">{space.city || "Transit"}</span>
+                      <span className="text-xs text-amber-400/90">{space.monument} • {space.city}</span>
                       <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-400">
                         {prop.has_mahal ? (
-                          <span className="text-red-400 font-bold flex items-center gap-1">🏛️ 1 Luxury Mahal</span>
+                          <span className="text-red-400 font-bold flex items-center gap-1">🏨 1 Luxury Hotel</span>
                         ) : prop.bhavans > 0 ? (
                           <span className="text-emerald-400 font-bold flex items-center gap-1">
-                            🏢 {prop.bhavans} Bhavan(s)
+                            🏠 {prop.bhavans} House(s)
                           </span>
                         ) : (
                           <span>Undeveloped Land</span>
@@ -111,33 +107,29 @@ export const PortfolioModal: React.FC<PortfolioModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
                     {space.type === "property" && !prop.is_mortgaged && (
                       <>
-                        {/* Build Bhavan */}
                         {prop.bhavans < 4 && !prop.has_mahal && (
                           <button
                             onClick={() => { sounds.playBuildBhavan(); onBuildBhavan(prop.space_id); }}
                             className="py-1.5 px-3 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow"
                           >
-                            <Plus className="w-3.5 h-3.5" /> +1 Bhavan (₹{space.house_cost.toLocaleString("en-IN")})
+                            <Plus className="w-3.5 h-3.5" /> +1 House (₹{space.house_cost.toLocaleString("en-IN")})
                           </button>
                         )}
 
-                        {/* Upgrade to Mahal */}
                         {prop.bhavans === 4 && !prop.has_mahal && (
                           <button
                             onClick={() => { sounds.playBuyProperty(); onBuildMahal(prop.space_id); }}
                             className="py-1.5 px-3 bg-rose-700 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow animate-pulse"
                           >
-                            <ArrowUp className="w-3.5 h-3.5" /> Mahal (₹{space.hotel_cost.toLocaleString("en-IN")})
+                            <ArrowUp className="w-3.5 h-3.5" /> Hotel (₹{space.hotel_cost.toLocaleString("en-IN")})
                           </button>
                         )}
                       </>
                     )}
 
-                    {/* Mortgage / Unmortgage */}
                     {prop.is_mortgaged ? (
                       <button
                         onClick={() => { sounds.playCashChime(); onUnmortgage(prop.space_id); }}

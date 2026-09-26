@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Player } from "@/lib/types";
 import { sounds } from "@/lib/sounds";
 import confetti from "canvas-confetti";
-import { Trophy, Sparkles, Crown, RotateCcw } from "lucide-react";
+import { Trophy, RotateCcw } from "lucide-react";
 
 interface VictoryModalProps {
   winner?: Player;
@@ -52,7 +52,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ winner, onPlayAgain 
         </div>
 
         <span className="text-xs font-black uppercase tracking-widest text-amber-400">
-          SUPREME EMPEROR OF BHARAT • भारत का कुबेर
+          SUPREME MONOPOLY CHAMPION
         </span>
 
         <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-300 mt-2 mb-1">
@@ -60,11 +60,11 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ winner, onPlayAgain 
         </h1>
 
         <p className="text-sm font-semibold text-amber-300/80 mb-6">
-          Has conquered all rivals and accumulated India&apos;s greatest real estate empire!
+          Has bankrupted all rivals and conquered the Indian real estate market!
         </p>
 
         <div className="p-4 bg-slate-950/80 rounded-2xl border border-amber-500/40 mb-6">
-          <span className="text-xs text-slate-400 block mb-1">Final Wealth</span>
+          <span className="text-xs text-slate-400 block mb-1">Final Net Worth</span>
           <span className="text-3xl font-black text-emerald-400">
             ₹{winner.cash.toLocaleString("en-IN")}
           </span>
@@ -74,7 +74,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ winner, onPlayAgain 
           onClick={onPlayAgain}
           className="w-full py-3.5 px-6 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black rounded-xl text-sm shadow-xl transform active:scale-95 transition-all flex items-center justify-center gap-2"
         >
-          <RotateCcw className="w-5 h-5" /> Start New Dynasty (नया खेल)
+          <RotateCcw className="w-5 h-5" /> Play Again (New Game)
         </button>
       </div>
     </div>

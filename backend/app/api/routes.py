@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 from app.models.board_data import BOARD_SPACES, ColorGroup, COLOR_GROUPS_MAP
-from app.models.cards_data import KISMAT_CARDS, PANCHAYAT_CARDS
+from app.models.cards_data import CHANCE_CARDS, COMMUNITY_CARDS
 from app.models.game_state import PlayerToken, PLAYER_TOKENS_INFO
 from app.engine.room_manager import room_manager
 from app.engine.game_engine import KuberGameEngine
@@ -34,10 +34,10 @@ def get_board_layout():
 
 @router.get("/cards")
 def get_cards_catalog():
-    """Returns catalog of all Kismat and Panchayat cards."""
+    """Returns catalog of all Chance and Community Chest cards."""
     return {
-        "kismat": [c.model_dump() for c in KISMAT_CARDS],
-        "panchayat": [c.model_dump() for c in PANCHAYAT_CARDS]
+        "chance": [c.model_dump() for c in CHANCE_CARDS],
+        "community": [c.model_dump() for c in COMMUNITY_CARDS]
     }
 
 @router.post("/rooms/create")

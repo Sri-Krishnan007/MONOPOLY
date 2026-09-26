@@ -1,5 +1,5 @@
 """
-Indian Monopoly (KUBER) - Complete Game State and Action Pydantic Models
+Indian Monopoly - Complete Game State and Action Models (English Standard)
 """
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
@@ -16,14 +16,14 @@ class PlayerToken:
     CLAPPERBOARD = "clapperboard"
 
 PLAYER_TOKENS_INFO = [
-    {"id": PlayerToken.AUTO_RICKSHAW, "name": "Auto-Rickshaw", "hindi": "ऑटो-रिक्शा", "finish": "Antique Brass", "icon": "truck"},
-    {"id": PlayerToken.ROYAL_ELEPHANT, "name": "Royal Elephant", "hindi": "शाही हाथी", "finish": "Rose Copper", "icon": "shield"},
-    {"id": PlayerToken.CRICKET_BAT, "name": "Cricket Bat & Ball", "hindi": "बल्ला और गेंद", "finish": "Sterling Silver", "icon": "trophy"},
-    {"id": PlayerToken.CUTTING_CHAI, "name": "Cutting Chai", "hindi": "कटिंग चाय", "finish": "Stainless Steel", "icon": "coffee"},
-    {"id": PlayerToken.LOCOMOTIVE, "name": "WAP-7 Engine", "hindi": "रेल इंजन", "finish": "Gunmetal", "icon": "train"},
-    {"id": PlayerToken.SCOOTER, "name": "Bajaj Chetak", "hindi": "चेतक स्कूटर", "finish": "Matte Nickel", "icon": "bike"},
-    {"id": PlayerToken.LOTUS, "name": "National Lotus", "hindi": "कमल पुष्प", "finish": "24K Gold", "icon": "flower"},
-    {"id": PlayerToken.CLAPPERBOARD, "name": "Bollywood Reel", "hindi": "सिनेमा क्लैपर", "finish": "Black Chrome", "icon": "film"}
+    {"id": PlayerToken.AUTO_RICKSHAW, "name": "Auto-Rickshaw", "finish": "Antique Brass", "icon": "truck"},
+    {"id": PlayerToken.ROYAL_ELEPHANT, "name": "Royal Elephant", "finish": "Rose Copper", "icon": "shield"},
+    {"id": PlayerToken.CRICKET_BAT, "name": "Cricket Bat & Ball", "finish": "Sterling Silver", "icon": "trophy"},
+    {"id": PlayerToken.CUTTING_CHAI, "name": "Cutting Chai Cup", "finish": "Stainless Steel", "icon": "coffee"},
+    {"id": PlayerToken.LOCOMOTIVE, "name": "Steam Locomotive", "finish": "Dark Gunmetal", "icon": "train"},
+    {"id": PlayerToken.SCOOTER, "name": "Vintage Scooter", "finish": "Matte Nickel", "icon": "bike"},
+    {"id": PlayerToken.LOTUS, "name": "National Lotus", "finish": "24K Gold", "icon": "flower"},
+    {"id": PlayerToken.CLAPPERBOARD, "name": "Film Clapperboard", "finish": "Black Chrome", "icon": "film"}
 ]
 
 class Player(BaseModel):
@@ -45,8 +45,8 @@ class Player(BaseModel):
 class PropertyOwnership(BaseModel):
     space_id: int
     owner_id: str
-    bhavans: int = 0  # 0 to 4
-    has_mahal: bool = False
+    bhavans: int = 0  # 0 to 4 houses
+    has_mahal: bool = False  # Hotel
     is_mortgaged: bool = False
 
 class TurnPhase:
@@ -79,13 +79,12 @@ class TradeOffer(BaseModel):
     requested_properties: List[int] = []
     offered_jail_cards: int = 0
     requested_jail_cards: int = 0
-    status: str = "pending"  # "pending", "accepted", "declined", "cancelled"
+    status: str = "pending"
 
 class GameLog(BaseModel):
     id: str
     timestamp: float = Field(default_factory=time.time)
     message: str
-    hindi_message: Optional[str] = None
     player_id: Optional[str] = None
     log_type: str = "info"  # "info", "cash", "property", "dice", "card", "jail", "alert"
 
@@ -101,10 +100,10 @@ class GameState(BaseModel):
     doubles_count: int = 0
     turn_phase: str = TurnPhase.PRE_ROLL
     properties: Dict[int, PropertyOwnership] = {}
-    kismat_deck: List[str] = []  # card IDs
-    panchayat_deck: List[str] = []
-    bank_bhavans: int = 32
-    bank_mahals: int = 12
+    chance_deck: List[str] = []
+    community_deck: List[str] = []
+    bank_houses: int = 32
+    bank_hotels: int = 12
     logs: List[GameLog] = []
     active_auction: Optional[AuctionState] = None
     active_trade: Optional[TradeOffer] = None

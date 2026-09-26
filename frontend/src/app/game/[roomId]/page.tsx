@@ -14,8 +14,7 @@ import { DeedModal } from "@/components/Modals/DeedModal";
 import { PortfolioModal } from "@/components/Modals/PortfolioModal";
 import { VictoryModal } from "@/components/Modals/VictoryModal";
 import { RulebookModal } from "@/components/HUD/RulebookModal";
-import { sounds } from "@/lib/sounds";
-import { Crown, BookOpen, Volume2, VolumeX, Home as HomeIcon } from "lucide-react";
+import { Crown, BookOpen, Home as HomeIcon } from "lucide-react";
 
 export default function GameRoomPage() {
   const params = useParams();
@@ -29,7 +28,6 @@ export default function GameRoomPage() {
   const [inspectedSpaceId, setInspectedSpaceId] = useState<number | null>(null);
   const [showPortfolio, setShowPortfolio] = useState(false);
   const [showRulebook, setShowRulebook] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const socketRef = useRef<WebSocket | null>(null);
 
@@ -53,7 +51,7 @@ export default function GameRoomPage() {
     socketRef.current = ws;
 
     ws.onopen = () => {
-      console.log("WebSocket connected to Kuber server.");
+      console.log("WebSocket connected to Monopoly server.");
     };
 
     ws.onmessage = (event) => {
@@ -86,7 +84,7 @@ export default function GameRoomPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-slate-100 p-4">
         <Crown className="w-12 h-12 text-amber-400 animate-bounce mb-4" />
-        <h2 className="text-xl font-black text-amber-300">ENTERING THE KUBER REALM...</h2>
+        <h2 className="text-xl font-black text-amber-300">ENTERING THE GAME...</h2>
         <p className="text-xs text-slate-400 mt-1">Connecting to live game room...</p>
       </div>
     );
@@ -98,36 +96,35 @@ export default function GameRoomPage() {
   const winnerPlayer = game.winner_id ? game.players.find(p => p.id === game.winner_id) : undefined;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40 text-slate-100 p-2 sm:p-6 flex flex-col justify-between">
-      {/* Top Navigation Bar */}
-      <header className="flex items-center justify-between py-2 px-4 bg-slate-900/80 border border-slate-800 rounded-2xl backdrop-blur-md shadow-xl mb-4 select-none">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40 text-slate-100 p-2 sm:p-4 flex flex-col justify-between">
+      {/* Top Header */}
+      <header className="flex items-center justify-between py-1.5 px-4 bg-slate-900/80 border border-slate-800 rounded-2xl backdrop-blur-md shadow-xl mb-3 select-none">
         <div
           onClick={() => router.push("/")}
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          <Crown className="w-6 h-6 text-amber-400" />
+          <Crown className="w-5 h-5 text-amber-400" />
           <div>
-            <h1 className="text-base sm:text-lg font-black tracking-widest bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent uppercase">
-              KUBER
+            <h1 className="text-sm sm:text-base font-black tracking-widest bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent uppercase">
+              INDIAN MONOPOLY
             </h1>
-            <span className="text-[9px] text-amber-400/70 block leading-none">
-              Indian Property Empire
+            <span className="text-[8px] text-amber-400/70 block leading-none">
+              Cities & Monuments Edition
             </span>
           </div>
         </div>
 
-        {/* Status Badges & Controls */}
         <div className="flex items-center gap-2 sm:gap-4">
           <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-950 rounded-xl border border-slate-800 text-xs">
-            <span className="text-slate-400">Room:</span>
+            <span className="text-slate-400">Room Code:</span>
             <span className="font-mono font-bold text-amber-400">{game.room_code}</span>
           </div>
 
           <button
             onClick={() => setShowRulebook(true)}
-            className="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-all"
+            className="py-1 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-all"
           >
-            <BookOpen className="w-3.5 h-3.5 text-amber-400" /> Rulebook
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" /> Official Rules
           </button>
 
           <button
@@ -140,7 +137,7 @@ export default function GameRoomPage() {
         </div>
       </header>
 
-      {/* Main Game Interface */}
+      {/* Main Board & HUD Interface */}
       {game.status === "lobby" ? (
         <LobbyRoom
           game={game}
@@ -149,7 +146,7 @@ export default function GameRoomPage() {
           onStartGame={() => sendAction("START_GAME")}
         />
       ) : (
-        <main className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start max-w-[1550px] mx-auto w-full">
+        <main className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start max-w-[1450px] mx-auto w-full">
           {/* Left HUD: Player Ledger */}
           <aside className="lg:col-span-3 order-2 lg:order-1">
             <PlayerLedger game={game} myPlayerId={playerId} />
@@ -179,12 +176,11 @@ export default function GameRoomPage() {
       )}
 
       {/* Footer Branding */}
-      <footer className="mt-4 text-center text-[10px] text-slate-500 py-2">
-        KUBER: The Great Indian Property Empire • Crafted with Next.js & FastAPI
+      <footer className="mt-2 text-center text-[10px] text-slate-500 py-1">
+        Indian Monopoly: Cities & Monuments • Hasbro-compliant Game Rules & Mathematics
       </footer>
 
-      {/* Modals */}
-      {/* 1. Kismat / Panchayat Card Drawn Modal */}
+      {/* Overlays and Modals */}
       {game.last_drawn_card && game.turn_phase === "card_drawn" && (
         <CardModal
           card={game.last_drawn_card as GameCard}
@@ -192,7 +188,6 @@ export default function GameRoomPage() {
         />
       )}
 
-      {/* 2. Public Auction Modal */}
       {game.active_auction && game.turn_phase === "auction_in_progress" && (
         <AuctionModal
           auction={game.active_auction}
@@ -203,7 +198,6 @@ export default function GameRoomPage() {
         />
       )}
 
-      {/* 3. Title Deed Certificate Inspector Modal */}
       {inspectedSpace && (
         <DeedModal
           space={inspectedSpace}
@@ -213,7 +207,6 @@ export default function GameRoomPage() {
         />
       )}
 
-      {/* 4. Portfolio & Construction Modal */}
       {showPortfolio && (
         <PortfolioModal
           game={game}
@@ -226,12 +219,10 @@ export default function GameRoomPage() {
         />
       )}
 
-      {/* 5. Rulebook Modal */}
       {showRulebook && (
         <RulebookModal onClose={() => setShowRulebook(false)} />
       )}
 
-      {/* 6. Victory Modal */}
       {game.status === "completed" && (
         <VictoryModal
           winner={winnerPlayer}

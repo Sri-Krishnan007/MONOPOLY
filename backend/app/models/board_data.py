@@ -1,5 +1,5 @@
 """
-Indian Monopoly (KUBER) - Board Data Model and Layout Specifications
+Indian Monopoly - Board Data Model with Iconic Indian Cities and Monuments (English Standard)
 """
 from typing import List, Dict, Optional
 from pydantic import BaseModel
@@ -8,8 +8,8 @@ class SpaceType:
     PROPERTY = "property"
     TRANSPORT = "transport"
     UTILITY = "utility"
-    KISMAT = "kismat"
-    PANCHAYAT = "panchayat"
+    CHANCE = "chance"
+    COMMUNITY = "community"
     TAX = "tax"
     GO = "go"
     JAIL = "jail"
@@ -17,19 +17,21 @@ class SpaceType:
     GO_TO_JAIL = "go_to_jail"
 
 class ColorGroup:
-    BROWN = "Brown"          # Heritage Terracotta
-    LIGHT_BLUE = "LightBlue"  # Coastal Cyan
-    PINK = "Pink"            # Royal Magenta
-    ORANGE = "Orange"        # Saffron Sunset
-    RED = "Red"              # Crimson Festive
-    YELLOW = "Yellow"        # Golden Ochre
-    GREEN = "Green"          # Emerald Capital
-    DARK_BLUE = "DarkBlue"   # Royal Indigo
+    BROWN = "Brown"
+    LIGHT_BLUE = "LightBlue"
+    PINK = "Pink"
+    ORANGE = "Orange"
+    RED = "Red"
+    YELLOW = "Yellow"
+    GREEN = "Green"
+    DARK_BLUE = "DarkBlue"
 
 class BoardSpace(BaseModel):
     id: int
     name: str
-    hindi_name: str
+    monument: str
+    city: str
+    state: str
     type: str
     color_group: Optional[str] = None
     price: int = 0
@@ -42,26 +44,28 @@ class BoardSpace(BaseModel):
     house_cost: int = 0
     hotel_cost: int = 0
     mortgage_value: int = 0
-    city: Optional[str] = None
-    state: Optional[str] = None
     description: str = ""
     icon: str = ""
 
-# Complete 40 Board Spaces
+# Complete 40 Board Spaces - Hasbro Monopoly Mathematical Standard
 BOARD_SPACES: List[BoardSpace] = [
-    # Bottom Row: 0 (Corner) to 10 (Corner) - Moving Left to Right
+    # Bottom Row: 0 (GO) to 10 (Jail)
     BoardSpace(
         id=0,
-        name="Aarambh (Start)",
-        hindi_name="शुभ आरम्भ",
+        name="START / GO",
+        monument="National Gateway",
+        city="National",
+        state="India",
         type=SpaceType.GO,
-        description="Auspicious Beginning. Collect ₹2,000 as salary upon passing or landing.",
+        description="Collect ₹2,000 salary upon passing or landing.",
         icon="sparkles"
     ),
     BoardSpace(
         id=1,
         name="Chandni Chowk",
-        hindi_name="चाँदनी चौक",
+        monument="Red Fort & Old Bazaar",
+        city="Old Delhi",
+        state="Delhi",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.BROWN,
         price=600,
@@ -74,23 +78,25 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=500,
         hotel_cost=500,
         mortgage_value=300,
-        city="Old Delhi",
-        state="Delhi",
-        description="Mughal-era historic bazaar famous for spice markets and heritage trade.",
-        icon="store"
+        description="Historic Mughal bazaar famous for commerce, spice markets, and heritage.",
+        icon="landmark"
     ),
     BoardSpace(
         id=2,
-        name="Panchayat Kalyan",
-        hindi_name="पंचायत कल्याण",
-        type=SpaceType.PANCHAYAT,
-        description="Draw a Panchayat & Community Welfare card.",
+        name="Community Chest",
+        monument="Community Welfare",
+        city="National",
+        state="India",
+        type=SpaceType.COMMUNITY,
+        description="Draw a Community Chest Card.",
         icon="users"
     ),
     BoardSpace(
         id=3,
         name="Charminar Bazaar",
-        hindi_name="चारमीनार बाज़ार",
+        monument="Charminar & Laad Bazaar",
+        city="Hyderabad",
+        state="Telangana",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.BROWN,
         price=600,
@@ -103,15 +109,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=500,
         hotel_cost=500,
         mortgage_value=300,
-        city="Hyderabad",
-        state="Telangana",
-        description="Laad Bazaar pearl traders and historic monument surroundings.",
-        icon="landmark"
+        description="Iconic 16th-century four-minaret monument and famous pearl markets.",
+        icon="monument"
     ),
     BoardSpace(
         id=4,
-        name="Aaykar (Income Tax)",
-        hindi_name="आयकर",
+        name="Income Tax",
+        monument="Direct Tax Office",
+        city="Central",
+        state="Revenue",
         type=SpaceType.TAX,
         price=2000,
         description="Pay statutory Income Tax of ₹2,000 to the Bank.",
@@ -120,20 +126,22 @@ BOARD_SPACES: List[BoardSpace] = [
     BoardSpace(
         id=5,
         name="Howrah Junction",
-        hindi_name="हावड़ा जंक्शन",
+        monument="Howrah Bridge & Station",
+        city="Kolkata",
+        state="West Bengal",
         type=SpaceType.TRANSPORT,
         price=2000,
         base_rent=250,
         mortgage_value=1000,
-        city="Kolkata",
-        state="West Bengal",
-        description="Eastern Railway gateway connecting millions daily over the Hooghly.",
+        description="Eastern Railway landmark and one of the world's busiest historic stations.",
         icon="train"
     ),
     BoardSpace(
         id=6,
-        name="Promenade Beach Rd",
-        hindi_name="प्रोमेनेड बीच रोड",
+        name="Promenade Beach",
+        monument="French War Memorial",
+        city="Puducherry",
+        state="Puducherry",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.LIGHT_BLUE,
         price=1000,
@@ -146,23 +154,25 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=500,
         hotel_cost=500,
         mortgage_value=500,
-        city="Puducherry",
-        state="Puducherry",
-        description="Scenic French-colonial seafront promenade and boutique heritage villas.",
+        description="Scenic French-colonial coastal boulevard and heritage quarter.",
         icon="palmtree"
     ),
     BoardSpace(
         id=7,
-        name="Kismat (Luck)",
-        hindi_name="किस्मत",
-        type=SpaceType.KISMAT,
-        description="Draw a Kismat (Luck & Destiny) card.",
+        name="Chance",
+        monument="Fortune Wheel",
+        city="National",
+        state="India",
+        type=SpaceType.CHANCE,
+        description="Draw a Chance Card.",
         icon="clover"
     ),
     BoardSpace(
         id=8,
         name="Calangute Strip",
-        hindi_name="कलंगूट स्ट्रिप",
+        monument="Aguada Fort & Beach",
+        city="North Goa",
+        state="Goa",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.LIGHT_BLUE,
         price=1000,
@@ -175,15 +185,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=500,
         hotel_cost=500,
         mortgage_value=500,
-        city="North Goa",
-        state="Goa",
-        description="High-energy beach tourist boulevard and resort strip.",
+        description="World-renowned coastal tourist destination and 17th-century Portuguese fort.",
         icon="sun"
     ),
     BoardSpace(
         id=9,
         name="Marine Drive Kochi",
-        hindi_name="मरीन ड्राइव कोच्चि",
+        monument="Chinese Fishing Nets & Fort",
+        city="Kochi",
+        state="Kerala",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.LIGHT_BLUE,
         price=1200,
@@ -196,24 +206,26 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=500,
         hotel_cost=500,
         mortgage_value=600,
-        city="Kochi",
-        state="Kerala",
-        description="Picturesque backwaters waterfront promenade and trade corridor.",
+        description="Arabian Sea spice trade port and scenic waterfront promenade.",
         icon="anchor"
     ),
-    # Left Column: 10 (Corner) to 20 (Corner) - Moving Bottom to Top
+    # Left Column: 10 (Jail) to 20 (Free Parking)
     BoardSpace(
         id=10,
-        name="Police Chowki",
-        hindi_name="पुलिस चौकी / हवालात",
+        name="In Jail / Just Visiting",
+        monument="Central Detention Facility",
+        city="Judicial",
+        state="Jurisdiction",
         type=SpaceType.JAIL,
-        description="Detention Center. Just Visiting or Serving Bail Period.",
+        description="Detention Facility. Visiting is free; prisoners must pay ₹500 or roll doubles.",
         icon="shield-alert"
     ),
     BoardSpace(
         id=11,
         name="MI Road (Pink City)",
-        hindi_name="एमआई रोड",
+        monument="Hawa Mahal & City Palace",
+        city="Jaipur",
+        state="Rajasthan",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.PINK,
         price=1400,
@@ -226,25 +238,27 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1000,
         hotel_cost=1000,
         mortgage_value=700,
-        city="Jaipur",
-        state="Rajasthan",
-        description="Mirza Ismail Road, Jaipur's regal handicraft, gems and emporium boulevard.",
+        description="Royal Pink City handicraft corridor near the Palace of Winds.",
         icon="gem"
     ),
     BoardSpace(
         id=12,
         name="National Power Grid",
-        hindi_name="राष्ट्रीय ऊर्जा ग्रिड",
+        monument="PowerGrid & NTPC",
+        city="National",
+        state="Infrastructure",
         type=SpaceType.UTILITY,
         price=1500,
         mortgage_value=750,
-        description="National Electricity Grid. Rent = 40x dice roll (1 owned) or 100x dice roll (both owned).",
+        description="National Electricity Transmission Grid. Rent: 40x roll (1 owned) or 100x roll (both owned).",
         icon="zap"
     ),
     BoardSpace(
         id=13,
         name="Dashashwamedh Ghat",
-        hindi_name="दशाश्वमेध घाट",
+        monument="Kashi Vishwanath Corridor",
+        city="Varanasi",
+        state="Uttar Pradesh",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.PINK,
         price=1400,
@@ -257,15 +271,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1000,
         hotel_cost=1000,
         mortgage_value=700,
-        city="Varanasi",
-        state="Uttar Pradesh",
-        description="World's most iconic spiritual riverfront and heritage pilgrimage center.",
+        description="World's oldest spiritual riverfront on the sacred Ganges.",
         icon="flame"
     ),
     BoardSpace(
         id=14,
-        name="Mall Road Shimla",
-        hindi_name="माल रोड शिमला",
+        name="Mall Road",
+        monument="The Ridge & Viceregal Lodge",
+        city="Shimla",
+        state="Himachal Pradesh",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.PINK,
         price=1600,
@@ -278,28 +292,28 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1000,
         hotel_cost=1000,
         mortgage_value=800,
-        city="Shimla",
-        state="Himachal Pradesh",
-        description="Himalayan ridge pedestrian shopping promenade and colonial retreat.",
+        description="Historic Himalayan hill station ridge and colonial commercial avenue.",
         icon="mountain"
     ),
     BoardSpace(
         id=15,
         name="CSMT Terminus",
-        hindi_name="सीएसएमटी मुंबई",
+        monument="Victoria Gothic Terminus",
+        city="Mumbai",
+        state="Maharashtra",
         type=SpaceType.TRANSPORT,
         price=2000,
         base_rent=250,
         mortgage_value=1000,
-        city="Mumbai",
-        state="Maharashtra",
-        description="UNESCO World Heritage Victorian Gothic landmark and Central Railway HQ.",
+        description="UNESCO World Heritage Victorian Gothic railway headquarters of Central Railway.",
         icon="train"
     ),
     BoardSpace(
         id=16,
         name="FC Road (Deccan)",
-        hindi_name="एफसी रोड पुणे",
+        monument="Shaniwar Wada Fort",
+        city="Pune",
+        state="Maharashtra",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.ORANGE,
         price=1800,
@@ -312,23 +326,25 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1000,
         hotel_cost=1000,
         mortgage_value=900,
-        city="Pune",
-        state="Maharashtra",
-        description="Fergusson College Road, vibrant youth cafe and educational-commercial strip.",
+        description="Historic Maratha empire seat and vibrant modern tech-student district.",
         icon="coffee"
     ),
     BoardSpace(
         id=17,
-        name="Panchayat Kalyan",
-        hindi_name="पंचायत कल्याण",
-        type=SpaceType.PANCHAYAT,
-        description="Draw a Panchayat & Community Welfare card.",
+        name="Community Chest",
+        monument="Community Welfare",
+        city="National",
+        state="India",
+        type=SpaceType.COMMUNITY,
+        description="Draw a Community Chest Card.",
         icon="users"
     ),
     BoardSpace(
         id=18,
         name="CG Road",
-        hindi_name="सीजी रोड अहमदाबाद",
+        monument="Sabarmati Riverfront & Ashram",
+        city="Ahmedabad",
+        state="Gujarat",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.ORANGE,
         price=1800,
@@ -341,15 +357,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1000,
         hotel_cost=1000,
         mortgage_value=900,
-        city="Ahmedabad",
-        state="Gujarat",
-        description="Chimanlal Girdharlal Road, prime retail and enterprise avenue.",
+        description="Major financial high-street and commercial retail boulevard.",
         icon="briefcase"
     ),
     BoardSpace(
         id=19,
         name="Sector 17 Plaza",
-        hindi_name="सेक्टर 17 प्लाज़ा",
+        monument="Rock Garden & Capitol Complex",
+        city="Chandigarh",
+        state="Chandigarh",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.ORANGE,
         price=2000,
@@ -362,24 +378,26 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1000,
         hotel_cost=1000,
         mortgage_value=1000,
-        city="Chandigarh",
-        state="Chandigarh",
-        description="Le Corbusier planned pedestrian shopping hub with open courtyards.",
+        description="Le Corbusier planned pedestrian plaza and capital commercial zone.",
         icon="building"
     ),
-    # Top Row: 20 (Corner) to 30 (Corner) - Moving Left to Right
+    # Top Row: 20 (Free Parking) to 30 (Go To Jail)
     BoardSpace(
         id=20,
-        name="Vishram Sthal",
-        hindi_name="विश्राम स्थल (यात्री निवास)",
+        name="Free Parking",
+        monument="Public Transit Rest Hub",
+        city="Safe",
+        state="Zone",
         type=SpaceType.FREE_PARKING,
-        description="Free Resting Zone. Relax and plan your next tycoon investment.",
+        description="Resting Zone. No rent or fee charged.",
         icon="tent"
     ),
     BoardSpace(
         id=21,
         name="Park Street",
-        hindi_name="पार्क स्ट्रीट",
+        monument="Victoria Memorial",
+        city="Kolkata",
+        state="West Bengal",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.RED,
         price=2200,
@@ -392,23 +410,25 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1500,
         hotel_cost=1500,
         mortgage_value=1100,
-        city="Kolkata",
-        state="West Bengal",
-        description="The cultural, culinary, and nightlife high-street of the City of Joy.",
+        description="Historic cultural, culinary, and corporate avenue near Victoria Memorial.",
         icon="music"
     ),
     BoardSpace(
         id=22,
-        name="Kismat (Luck)",
-        hindi_name="किस्मत",
-        type=SpaceType.KISMAT,
-        description="Draw a Kismat (Luck & Destiny) card.",
+        name="Chance",
+        monument="Fortune Wheel",
+        city="National",
+        state="India",
+        type=SpaceType.CHANCE,
+        description="Draw a Chance Card.",
         icon="clover"
     ),
     BoardSpace(
         id=23,
-        name="HITEC City Cyber Towers",
-        hindi_name="हाईटेक सिटी",
+        name="HITEC City",
+        monument="Cyber Towers & Golconda",
+        city="Hyderabad",
+        state="Telangana",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.RED,
         price=2200,
@@ -421,15 +441,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1500,
         hotel_cost=1500,
         mortgage_value=1100,
-        city="Hyderabad",
-        state="Telangana",
-        description="Cyberabad flagship technology park housing global software giants.",
+        description="Flagship technology corridor housing leading global tech corporations.",
         icon="cpu"
     ),
     BoardSpace(
         id=24,
         name="Brigade & MG Road",
-        hindi_name="ब्रिगेड और एमजी रोड",
+        monument="Vidhana Soudha & Cubbon Park",
+        city="Bengaluru",
+        state="Karnataka",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.RED,
         price=2400,
@@ -442,28 +462,28 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1500,
         hotel_cost=1500,
         mortgage_value=1200,
-        city="Bengaluru",
-        state="Karnataka",
-        description="Silicon Plateau's bustling commercial core, pubs, and tech headquarters.",
+        description="Silicon Plateau's bustling commercial downtown and innovation nexus.",
         icon="laptop"
     ),
     BoardSpace(
         id=25,
         name="New Delhi Junction",
-        hindi_name="नई दिल्ली रेलवे स्टेशन",
+        monument="India Gate & Railway Hub",
+        city="New Delhi",
+        state="Delhi",
         type=SpaceType.TRANSPORT,
         price=2000,
         base_rent=250,
         mortgage_value=1000,
-        city="New Delhi",
-        state="Delhi",
-        description="Northern Railway mega-terminus handling over 500,000 travelers daily.",
+        description="Northern Railway mega-terminus connecting the capital across India.",
         icon="train"
     ),
     BoardSpace(
         id=26,
         name="T. Nagar & Anna Salai",
-        hindi_name="टी. नगर और अन्ना सलाई",
+        monument="Ripon Building & Marina Beach",
+        city="Chennai",
+        state="Tamil Nadu",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.YELLOW,
         price=2600,
@@ -476,15 +496,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1500,
         hotel_cost=1500,
         mortgage_value=1300,
-        city="Chennai",
-        state="Tamil Nadu",
-        description="India's largest retail silk and gold jewelry shopping district.",
+        description="India's largest retail hub for gold jewellery and silk commerce.",
         icon="shopping-bag"
     ),
     BoardSpace(
         id=27,
         name="Golf Course Road",
-        hindi_name="गोल्फ कोर्स रोड",
+        monument="Cyber Hub Towers",
+        city="Gurugram",
+        state="Haryana",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.YELLOW,
         price=2600,
@@ -497,25 +517,27 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1500,
         hotel_cost=1500,
         mortgage_value=1300,
-        city="Gurugram",
-        state="Haryana",
-        description="Millennium City's ultra-luxury condominium and corporate glass tower corridor.",
+        description="Millennium City's ultra-luxury condominium and corporate glass corridor.",
         icon="building-2"
     ),
     BoardSpace(
         id=28,
-        name="Jal Jeevan Board",
-        hindi_name="जल जीवन जल बोर्ड",
+        name="National Water Authority",
+        monument="Jal Jeevan Infrastructure",
+        city="National",
+        state="Infrastructure",
         type=SpaceType.UTILITY,
         price=1500,
         mortgage_value=750,
-        description="National Water Infrastructure. Rent = 40x dice roll (1 owned) or 100x dice roll (both owned).",
+        description="National Water Infrastructure. Rent: 40x roll (1 owned) or 100x roll (both owned).",
         icon="droplets"
     ),
     BoardSpace(
         id=29,
-        name="GS Road (Dispur Hub)",
-        hindi_name="जीएस रोड गुवाहाटी",
+        name="GS Road Dispur",
+        monument="Kamakhya Temple & Brahmaputra",
+        city="Guwahati",
+        state="Assam",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.YELLOW,
         price=2800,
@@ -528,24 +550,26 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=1500,
         hotel_cost=1500,
         mortgage_value=1400,
-        city="Guwahati",
-        state="Assam",
-        description="Northeast India's premier commercial and hospitality expressway.",
+        description="Commercial gateway and economic capital of Northeast India.",
         icon="map-pin"
     ),
-    # Right Column: 30 (Corner) to 39 - Moving Top to Bottom
+    # Right Column: 30 (Go to Jail) to 39
     BoardSpace(
         id=30,
-        name="Nyayalay Saman",
-        hindi_name="न्यायालय समन (हवालात जाएं)",
+        name="Go To Jail",
+        monument="Court Warrant",
+        city="Legal",
+        state="Summons",
         type=SpaceType.GO_TO_JAIL,
-        description="Court summons issued! Advance directly to Police Chowki without collecting ₹2,000 salary.",
+        description="Advance directly to Jail. Do not pass GO, do not collect ₹2,000.",
         icon="gavel"
     ),
     BoardSpace(
         id=31,
         name="Connaught Place",
-        hindi_name="कनॉट प्लेस",
+        monument="India Gate & Heritage Colonnade",
+        city="New Delhi",
+        state="Delhi",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.GREEN,
         price=3000,
@@ -558,15 +582,15 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=2000,
         hotel_cost=2000,
         mortgage_value=1500,
-        city="New Delhi",
-        state="Delhi",
-        description="Iconic circular Georgian colonial colonnade and corporate nerve center.",
+        description="Famous Georgian circular colonnade financial and retail powerhouse.",
         icon="compass"
     ),
     BoardSpace(
         id=32,
         name="Bandra-Kurla Complex",
-        hindi_name="बांद्रा-कुर्ला कॉम्प्लेक्स (BKC)",
+        monument="Bandra-Worli Sea Link & BKC",
+        city="Mumbai",
+        state="Maharashtra",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.GREEN,
         price=3000,
@@ -579,23 +603,25 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=2000,
         hotel_cost=2000,
         mortgage_value=1500,
-        city="Mumbai",
-        state="Maharashtra",
-        description="India's highest valued central financial district and corporate headquarters.",
+        description="Premier central financial district housing stock exchanges and conglomerates.",
         icon="landmark"
     ),
     BoardSpace(
         id=33,
-        name="Panchayat Kalyan",
-        hindi_name="पंचायत कल्याण",
-        type=SpaceType.PANCHAYAT,
-        description="Draw a Panchayat & Community Welfare card.",
+        name="Community Chest",
+        monument="Community Welfare",
+        city="National",
+        state="India",
+        type=SpaceType.COMMUNITY,
+        description="Draw a Community Chest Card.",
         icon="users"
     ),
     BoardSpace(
         id=34,
         name="Lutyens' Bungalow Zone",
-        hindi_name="लुटियंस बंगला ज़ोन",
+        monument="Rashtrapati Bhavan & Qutub Minar",
+        city="New Delhi",
+        state="Delhi",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.GREEN,
         price=3200,
@@ -608,36 +634,38 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=2000,
         hotel_cost=2000,
         mortgage_value=1600,
-        city="New Delhi",
-        state="Delhi",
-        description="The nation's most elite diplomatic power corridors and sprawling estate grounds.",
+        description="The nation's most elite diplomatic power seat and sprawling tree-lined estates.",
         icon="crown"
     ),
     BoardSpace(
         id=35,
         name="Chennai Central MGR",
-        hindi_name="चेन्नई सेंट्रल",
+        monument="Romanesque Railway Central",
+        city="Chennai",
+        state="Tamil Nadu",
         type=SpaceType.TRANSPORT,
         price=2000,
         base_rent=250,
         mortgage_value=1000,
-        city="Chennai",
-        state="Tamil Nadu",
         description="Southern Railway's majestic crimson Romanesque transit nexus.",
         icon="train"
     ),
     BoardSpace(
         id=36,
-        name="Kismat (Luck)",
-        hindi_name="किस्मत",
-        type=SpaceType.KISMAT,
-        description="Draw a Kismat (Luck & Destiny) card.",
+        name="Chance",
+        monument="Fortune Wheel",
+        city="National",
+        state="India",
+        type=SpaceType.CHANCE,
+        description="Draw a Chance Card.",
         icon="clover"
     ),
     BoardSpace(
         id=37,
         name="Altamount Road",
-        hindi_name="अल्टामाउंट रोड",
+        monument="Gateway of India & Antilia",
+        city="Mumbai",
+        state="Maharashtra",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.DARK_BLUE,
         price=3500,
@@ -650,24 +678,26 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=2000,
         hotel_cost=2000,
         mortgage_value=1750,
-        city="Mumbai",
-        state="Maharashtra",
-        description="Billionaires' Boulevard on Cumballa Hill, home to India's wealthiest magnates.",
+        description="Billionaires' Boulevard on Cumballa Hill, home to India's top magnates.",
         icon="diamond"
     ),
     BoardSpace(
         id=38,
-        name="GST & Luxury Cess",
-        hindi_name="जीएसटी व विलासिता उपकर",
+        name="Luxury Tax",
+        monument="High-Wealth Cess",
+        city="Treasury",
+        state="Taxation",
         type=SpaceType.TAX,
         price=1000,
-        description="Pay statutory Luxury Goods & High-Wealth Cess of ₹1,000 to the Bank.",
+        description="Pay statutory Luxury Tax of ₹1,000 to the Bank.",
         icon="badge-dollar-sign"
     ),
     BoardSpace(
         id=39,
         name="Marine Drive Promenade",
-        hindi_name="मरीन ड्राइव मुंबई",
+        monument="Queen's Necklace & Gateway",
+        city="Mumbai",
+        state="Maharashtra",
         type=SpaceType.PROPERTY,
         color_group=ColorGroup.DARK_BLUE,
         price=4000,
@@ -680,14 +710,11 @@ BOARD_SPACES: List[BoardSpace] = [
         house_cost=2000,
         hotel_cost=2000,
         mortgage_value=2000,
-        city="Mumbai",
-        state="Maharashtra",
         description="The iconic Queen's Necklace waterfront arc and crown jewel of Indian real estate.",
         icon="sparkle"
     )
 ]
 
-# Color Group Mapping
 COLOR_GROUPS_MAP = {
     ColorGroup.BROWN: [1, 3],
     ColorGroup.LIGHT_BLUE: [6, 8, 9],

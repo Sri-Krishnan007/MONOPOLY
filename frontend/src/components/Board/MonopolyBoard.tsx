@@ -43,11 +43,9 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
   };
 
   return (
-    <div className="w-full max-w-[950px] aspect-square mx-auto p-2 sm:p-4 bg-slate-950 rounded-3xl shadow-2xl border-2 border-amber-600/40 select-none">
-      {/* 11x11 CSS Grid Board Layout */}
-      <div className="w-full h-full grid grid-cols-11 grid-rows-11 gap-1 relative rounded-2xl overflow-hidden bg-slate-900/50 p-1 border border-slate-800">
-        {/* --- TOP ROW: Positions 20 to 30 --- */}
-        {/* Pos 20: Vishram Sthal (Corner: Row 0, Col 0) */}
+    <div className="w-full max-w-[820px] aspect-square mx-auto p-1.5 sm:p-3 bg-slate-950 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-amber-600/40 select-none">
+      <div className="w-full h-full grid grid-cols-11 grid-rows-11 gap-0.5 sm:gap-1 relative rounded-xl overflow-hidden bg-slate-900/50 p-0.5 border border-slate-800">
+        {/* TOP ROW: 20 (Free Parking) -> 30 (Go To Jail) */}
         <div className="col-start-1 row-start-1">
           <BoardTile
             space={getSpace(20)}
@@ -58,7 +56,6 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             isCurrentPlayerPosition={curPlayer?.position === 20}
           />
         </div>
-        {/* Pos 21 to 29 (Row 0, Cols 1 to 9) */}
         {[21, 22, 23, 24, 25, 26, 27, 28, 29].map((pos, idx) => (
           <div key={pos} style={{ gridColumnStart: idx + 2, gridRowStart: 1 }}>
             <BoardTile
@@ -71,7 +68,6 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             />
           </div>
         ))}
-        {/* Pos 30: Nyayalay Saman / Go to Jail (Corner: Row 0, Col 10) */}
         <div className="col-start-11 row-start-1">
           <BoardTile
             space={getSpace(30)}
@@ -83,7 +79,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           />
         </div>
 
-        {/* --- RIGHT COLUMN: Positions 31 to 39 (Col 10, Rows 1 to 9) --- */}
+        {/* RIGHT COLUMN: 31 -> 39 */}
         {[31, 32, 33, 34, 35, 36, 37, 38, 39].map((pos, idx) => (
           <div key={pos} style={{ gridColumnStart: 11, gridRowStart: idx + 2 }}>
             <BoardTile
@@ -97,8 +93,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           </div>
         ))}
 
-        {/* --- BOTTOM ROW: Positions 10 to 0 (Row 10, Cols 0 to 10) --- */}
-        {/* Pos 10: Police Chowki / Jail (Corner: Row 10, Col 0) */}
+        {/* BOTTOM ROW: 10 (Jail) -> 0 (GO) */}
         <div className="col-start-1 row-start-11">
           <BoardTile
             space={getSpace(10)}
@@ -109,7 +104,6 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             isCurrentPlayerPosition={curPlayer?.position === 10}
           />
         </div>
-        {/* Pos 9 down to 1 (Row 10, Cols 1 to 9) */}
         {[9, 8, 7, 6, 5, 4, 3, 2, 1].map((pos, idx) => (
           <div key={pos} style={{ gridColumnStart: idx + 2, gridRowStart: 11 }}>
             <BoardTile
@@ -122,7 +116,6 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             />
           </div>
         ))}
-        {/* Pos 0: Aarambh / GO (Corner: Row 10, Col 10) */}
         <div className="col-start-11 row-start-11">
           <BoardTile
             space={getSpace(0)}
@@ -134,7 +127,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           />
         </div>
 
-        {/* --- LEFT COLUMN: Positions 11 to 19 (Col 0, Rows 9 down to 1) --- */}
+        {/* LEFT COLUMN: 19 down to 11 */}
         {[19, 18, 17, 16, 15, 14, 13, 12, 11].map((pos, idx) => (
           <div key={pos} style={{ gridColumnStart: 1, gridRowStart: idx + 2 }}>
             <BoardTile
@@ -148,8 +141,8 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           </div>
         ))}
 
-        {/* --- CENTER BOARD AREA: Rows 2 to 10, Cols 2 to 10 (9x9 Area) --- */}
-        <div className="col-start-2 col-end-11 row-start-2 row-end-11 p-2 sm:p-4 flex items-center justify-center">
+        {/* CENTER BOARD AREA */}
+        <div className="col-start-2 col-end-11 row-start-2 row-end-11 p-1 sm:p-2 flex items-center justify-center">
           <CenterConsole
             game={game}
             myPlayerId={myPlayerId}

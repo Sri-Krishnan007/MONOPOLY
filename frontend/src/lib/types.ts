@@ -1,8 +1,10 @@
 export interface BoardSpace {
   id: number;
   name: string;
-  hindi_name: string;
-  type: "property" | "transport" | "utility" | "kismat" | "panchayat" | "tax" | "go" | "jail" | "free_parking" | "go_to_jail";
+  monument: string;
+  city: string;
+  state: string;
+  type: "property" | "transport" | "utility" | "chance" | "community" | "tax" | "go" | "jail" | "free_parking" | "go_to_jail";
   color_group?: string;
   price: number;
   base_rent: number;
@@ -14,8 +16,6 @@ export interface BoardSpace {
   house_cost: number;
   hotel_cost: number;
   mortgage_value: number;
-  city?: string;
-  state?: string;
   description: string;
   icon: string;
 }
@@ -56,16 +56,14 @@ export interface GameLog {
   id: string;
   timestamp: number;
   message: string;
-  hindi_message?: string;
   player_id?: string;
   log_type: "info" | "cash" | "property" | "dice" | "card" | "jail" | "alert";
 }
 
 export interface GameCard {
   id: string;
-  deck: "kismat" | "panchayat";
+  deck: "chance" | "community";
   title: string;
-  hindi_title: string;
   description: string;
   action_type: string;
   value?: number;
@@ -85,8 +83,8 @@ export interface GameState {
   doubles_count: number;
   turn_phase: "pre_roll" | "rolled" | "buy_or_auction_decision" | "auction_in_progress" | "card_drawn" | "in_jail_decision" | "pay_rent_due" | "post_turn" | "game_over";
   properties: Record<number, PropertyOwnership>;
-  bank_bhavans: number;
-  bank_mahals: number;
+  bank_houses: number;
+  bank_hotels: number;
   logs: GameLog[];
   active_auction?: AuctionState;
   last_drawn_card?: GameCard;
@@ -97,7 +95,6 @@ export interface GameState {
 export interface PlayerTokenInfo {
   id: string;
   name: string;
-  hindi: string;
   finish: string;
   icon: string;
   color: string;

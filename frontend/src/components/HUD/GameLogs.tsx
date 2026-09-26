@@ -35,17 +35,17 @@ export const GameLogs: React.FC<GameLogsProps> = ({ logs }) => {
   };
 
   return (
-    <div className="flex flex-col h-[280px] sm:h-[340px] p-4 bg-slate-900/90 rounded-2xl border border-slate-800 backdrop-blur-md shadow-xl select-none">
+    <div className="flex flex-col h-[260px] sm:h-[320px] p-3.5 bg-slate-900/90 rounded-2xl border border-slate-800 backdrop-blur-md shadow-xl select-none">
       <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
-        <MessageSquareText className="w-5 h-5 text-amber-400" />
-        <h3 className="font-bold text-sm text-slate-100 uppercase tracking-wider">
-          Empire Chronicles (गतिविधि विवरण)
+        <MessageSquareText className="w-4 h-4 text-amber-400" />
+        <h3 className="font-bold text-xs sm:text-sm text-slate-100 uppercase tracking-wider">
+          Game Activity Log
         </h3>
       </div>
 
       <div
         ref={scrollRef}
-        className="flex-grow overflow-y-auto mt-2 space-y-2 pr-1 text-xs text-slate-300 font-sans"
+        className="flex-grow overflow-y-auto mt-2 space-y-1.5 pr-1 text-xs text-slate-300 font-sans"
       >
         {logs.map((log) => (
           <div
@@ -55,11 +55,6 @@ export const GameLogs: React.FC<GameLogsProps> = ({ logs }) => {
             {getLogIcon(log.log_type)}
             <div className="flex-grow">
               <p className="leading-tight text-slate-200">{log.message}</p>
-              {log.hindi_message && (
-                <p className="text-[10px] text-amber-400/70 leading-tight mt-0.5">
-                  {log.hindi_message}
-                </p>
-              )}
             </div>
           </div>
         ))}
