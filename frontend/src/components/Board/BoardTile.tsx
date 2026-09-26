@@ -14,6 +14,7 @@ import {
 interface BoardTileProps {
   space: BoardSpace;
   ownership?: PropertyOwnership;
+  owner?: Player;
   playersHere: Player[];
   orientation: "bottom" | "left" | "top" | "right" | "corner";
   onInspect: (spaceId: number) => void;
@@ -21,7 +22,7 @@ interface BoardTileProps {
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  sparkles: <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 animate-pulse" />,
+  sparkles: <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />,
   "shield-alert": <ShieldAlert className="w-5 h-5 text-rose-400" />,
   tent: <Tent className="w-5 h-5 text-emerald-400" />,
   gavel: <Gavel className="w-5 h-5 text-rose-500 animate-bounce" />,
@@ -58,6 +59,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 export const BoardTile: React.FC<BoardTileProps> = ({
   space,
   ownership,
+  owner,
   playersHere,
   orientation,
   onInspect,
@@ -74,34 +76,48 @@ export const BoardTile: React.FC<BoardTileProps> = ({
   return (
     <div
       onClick={() => onInspect(space.id)}
-      className={`relative flex flex-col justify-between p-1 select-none cursor-pointer transition-all duration-200 border border-slate-700/60 bg-slate-900/90 hover:bg-slate-800 hover:border-amber-500 hover:z-20 hover:shadow-xl hover:shadow-amber-500/10 ${
-        isCurrentPlayerPosition ? "ring-2 ring-amber-400 ring-offset-1 ring-offset-slate-950 z-10" : ""
+      className={`relative flex flex-col justify-between p-1 select-none cursor-pointer transition-all duration-200 border border-slate-700/70 bg-slate-900 hover:bg-slate-800 hover:border-amber-400 hover:z-20 hover:shadow-2xl hover:shadow-amber-500/20 ${
+        isCurrentPlayerPosition ? "ring-2 ring-amber-400 ring-offset-1 ring-offset-slate-950 z-10 scale-[1.02]" : ""
       } ${
-        isCorner ? "w-full h-full bg-slate-950/95" : ""
+        isCorner ? "w-full h-full bg-slate-950" : ""
       }`}
     >
-      {/* Color Group Header for Properties */}
+      {/* Property Color Header */}
       {colorStyle && (
         <div
-          className={`h-2.5 sm:h-3 w-full rounded-t-sm mb-0.5 flex items-center justify-between px-1 text-[8px] font-bold ${colorStyle.bg} ${colorStyle.text} shadow-inner`}
+          className={`h-3 sm:h-3.5 w-full rounded-t-sm mb-0.5 flex items-center justify-between px-1 text-[8px] font-bold ${colorStyle.bg} ${colorStyle.text} shadow`}
         >
-          {/* House / Hotel Markers */}
+          {/* House / Hotel counters */}
           <div className="flex items-center gap-0.5">
             {ownership?.has_mahal ? (
-              <span className="flex items-center gap-0.5 bg-red-700 text-white px-1 rounded text-[7px] font-black uppercase">
-                Hotel
+              <span className="bg-red-600 text-white px-1 rounded text-[7px] font-black uppercase tracking-wider animate-pulse">
+                HOTEL
               </span>
             ) : ownership?.bhavans ? (
               <div className="flex gap-0.5">
                 {Array.from({ length: ownership.bhavans }).map((_, i) => (
-                  <span key={i} className="w-1.5 h-1.5 bg-emerald-400 rounded-sm inline-block shadow-sm" />
+                  <span key={i} className="w-1.5 h-1.5 bg-emerald-400 rounded-sm inline-block shadow" />
                 ))}
               </div>
             ) : null}
           </div>
           {ownership?.is_mortgaged && (
-            <span className="bg-red-900 text-red-200 px-0.5 rounded text-[6px]">MORTGAGED</span>
+            <span className="bg-red-950 text-red-300 border border-red-700 px-0.5 rounded text-[6px] font-bold">
+              MORTGAGED
+            </span>
           )}
+        </div>
+      )}
+
+      {/* Owner Ribbon Badge (Shows exactly who bought this space) */}
+      {owner && (
+        <div
+          className="w-full py-0.5 px-1 mb-0.5 rounded text-[7px] sm:text-[8px] font-bold text-white flex items-center justify-between shadow"
+          style={{ backgroundColor: owner.color }}
+          title={`Owned by ${owner.name}`}
+        >
+          <span className="truncate max-w-[50px] sm:max-w-[65px]">{owner.name}</span>
+          <span>{getTokenEmoji(owner.token)}</span>
         </div>
       )}
 
@@ -112,20 +128,20 @@ export const BoardTile: React.FC<BoardTileProps> = ({
         </div>
 
         {/* English Name */}
-        <p className="font-bold text-[9px] sm:text-[10px] leading-tight text-slate-100 line-clamp-2">
+        <p className="font-black text-[9px] sm:text-[10px] leading-tight text-slate-100 line-clamp-2">
           {space.name}
         </p>
 
-        {/* Monument / City Subtitle */}
+        {/* Monument & City */}
         {space.monument && (
-          <p className="text-[7px] sm:text-[8px] text-amber-400/90 leading-tight line-clamp-1 font-medium">
+          <p className="text-[7px] sm:text-[8px] text-amber-400 font-semibold leading-tight line-clamp-1">
             {space.monument}
           </p>
         )}
 
-        {/* Price / Subtitle */}
+        {/* Price Tag */}
         {space.price > 0 ? (
-          <span className="mt-0.5 text-[8px] sm:text-[9px] font-bold text-emerald-400">
+          <span className="mt-0.5 text-[8px] sm:text-[9px] font-black text-emerald-400">
             ₹{space.price.toLocaleString("en-IN")}
           </span>
         ) : space.type === "go" ? (
@@ -133,13 +149,13 @@ export const BoardTile: React.FC<BoardTileProps> = ({
         ) : null}
       </div>
 
-      {/* Player Tokens Residing on Space */}
-      <div className="flex flex-wrap items-center justify-center gap-1 min-h-[16px] mt-0.5 bg-slate-950/70 rounded px-1">
+      {/* Player Tokens currently on Space */}
+      <div className="flex flex-wrap items-center justify-center gap-1 min-h-[16px] mt-0.5 bg-slate-950/80 rounded px-1 border border-slate-800">
         {playersHere.map((p) => (
           <div
             key={p.id}
             title={`${p.name} (₹${p.cash.toLocaleString("en-IN")})`}
-            className="flex items-center justify-center w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full text-[10px] shadow-md border border-white/20 transition-transform hover:scale-125"
+            className="flex items-center justify-center w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full text-[10px] shadow border border-white/40 transition-transform hover:scale-125"
             style={{ backgroundColor: p.color }}
           >
             <span>{getTokenEmoji(p.token)}</span>

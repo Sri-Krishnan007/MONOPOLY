@@ -38,18 +38,25 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
     return game.players.filter((p) => p.position === spaceId && !p.is_bankrupt);
   };
 
+  const getOwner = (spaceId: number) => {
+    const ownership = game.properties[spaceId];
+    if (!ownership) return undefined;
+    return game.players.find(p => p.id === ownership.owner_id);
+  };
+
   const getSpace = (id: number) => {
     return BOARD_SPACES[id] || BOARD_SPACES[0];
   };
 
   return (
-    <div className="w-full max-w-[820px] aspect-square mx-auto p-1.5 sm:p-3 bg-slate-950 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-amber-600/40 select-none">
-      <div className="w-full h-full grid grid-cols-11 grid-rows-11 gap-0.5 sm:gap-1 relative rounded-xl overflow-hidden bg-slate-900/50 p-0.5 border border-slate-800">
+    <div className="w-full max-w-[820px] aspect-square mx-auto p-1 sm:p-2.5 bg-slate-950 rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-amber-600/40 select-none">
+      <div className="w-full h-full grid grid-cols-11 grid-rows-11 gap-0.5 sm:gap-1 relative rounded-xl overflow-hidden bg-slate-900/60 p-0.5 border border-slate-800">
         {/* TOP ROW: 20 (Free Parking) -> 30 (Go To Jail) */}
         <div className="col-start-1 row-start-1">
           <BoardTile
             space={getSpace(20)}
             ownership={game.properties[20]}
+            owner={getOwner(20)}
             playersHere={getPlayersOnSpace(20)}
             orientation="corner"
             onInspect={onInspectSpace}
@@ -61,6 +68,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             <BoardTile
               space={getSpace(pos)}
               ownership={game.properties[pos]}
+              owner={getOwner(pos)}
               playersHere={getPlayersOnSpace(pos)}
               orientation="top"
               onInspect={onInspectSpace}
@@ -72,6 +80,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           <BoardTile
             space={getSpace(30)}
             ownership={game.properties[30]}
+            owner={getOwner(30)}
             playersHere={getPlayersOnSpace(30)}
             orientation="corner"
             onInspect={onInspectSpace}
@@ -85,6 +94,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             <BoardTile
               space={getSpace(pos)}
               ownership={game.properties[pos]}
+              owner={getOwner(pos)}
               playersHere={getPlayersOnSpace(pos)}
               orientation="right"
               onInspect={onInspectSpace}
@@ -98,6 +108,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           <BoardTile
             space={getSpace(10)}
             ownership={game.properties[10]}
+            owner={getOwner(10)}
             playersHere={getPlayersOnSpace(10)}
             orientation="corner"
             onInspect={onInspectSpace}
@@ -109,6 +120,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             <BoardTile
               space={getSpace(pos)}
               ownership={game.properties[pos]}
+              owner={getOwner(pos)}
               playersHere={getPlayersOnSpace(pos)}
               orientation="bottom"
               onInspect={onInspectSpace}
@@ -120,6 +132,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           <BoardTile
             space={getSpace(0)}
             ownership={game.properties[0]}
+            owner={getOwner(0)}
             playersHere={getPlayersOnSpace(0)}
             orientation="corner"
             onInspect={onInspectSpace}
@@ -133,6 +146,7 @@ export const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
             <BoardTile
               space={getSpace(pos)}
               ownership={game.properties[pos]}
+              owner={getOwner(pos)}
               playersHere={getPlayersOnSpace(pos)}
               orientation="left"
               onInspect={onInspectSpace}

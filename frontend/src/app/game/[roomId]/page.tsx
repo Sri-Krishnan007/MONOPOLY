@@ -7,6 +7,8 @@ import { BOARD_SPACES } from "@/lib/boardData";
 import { MonopolyBoard } from "@/components/Board/MonopolyBoard";
 import { PlayerLedger } from "@/components/HUD/PlayerLedger";
 import { GameLogs } from "@/components/HUD/GameLogs";
+import { PropertyRack } from "@/components/HUD/PropertyRack";
+import { CityExplorerModal } from "@/components/HUD/CityExplorerModal";
 import { LobbyRoom } from "@/components/Lobby/LobbyRoom";
 import { CardModal } from "@/components/Modals/CardModal";
 import { AuctionModal } from "@/components/Modals/AuctionModal";
@@ -14,7 +16,7 @@ import { DeedModal } from "@/components/Modals/DeedModal";
 import { PortfolioModal } from "@/components/Modals/PortfolioModal";
 import { VictoryModal } from "@/components/Modals/VictoryModal";
 import { RulebookModal } from "@/components/HUD/RulebookModal";
-import { Crown, BookOpen, Home as HomeIcon } from "lucide-react";
+import { Crown, BookOpen, Map, Home as HomeIcon } from "lucide-react";
 
 export default function GameRoomPage() {
   const params = useParams();
@@ -28,6 +30,7 @@ export default function GameRoomPage() {
   const [inspectedSpaceId, setInspectedSpaceId] = useState<number | null>(null);
   const [showPortfolio, setShowPortfolio] = useState(false);
   const [showRulebook, setShowRulebook] = useState(false);
+  const [showExplorer, setShowExplorer] = useState(false);
 
   const socketRef = useRef<WebSocket | null>(null);
 
@@ -114,17 +117,24 @@ export default function GameRoomPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-950 rounded-xl border border-slate-800 text-xs">
-            <span className="text-slate-400">Room Code:</span>
+            <span className="text-slate-400">Room:</span>
             <span className="font-mono font-bold text-amber-400">{game.room_code}</span>
           </div>
+
+          <button
+            onClick={() => setShowExplorer(true)}
+            className="py-1 px-3 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-amber-500/30 transition-all"
+          >
+            <Map className="w-3.5 h-3.5 text-amber-400" /> All Cities (22)
+          </button>
 
           <button
             onClick={() => setShowRulebook(true)}
             className="py-1 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-all"
           >
-            <BookOpen className="w-3.5 h-3.5 text-amber-400" /> Official Rules
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" /> Rules & Victory
           </button>
 
           <button
@@ -146,38 +156,53 @@ export default function GameRoomPage() {
           onStartGame={() => sendAction("START_GAME")}
         />
       ) : (
-        <main className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start max-w-[1450px] mx-auto w-full">
-          {/* Left HUD: Player Ledger */}
-          <aside className="lg:col-span-3 order-2 lg:order-1">
-            <PlayerLedger game={game} myPlayerId={playerId} />
-          </aside>
+        <main className="flex flex-col gap-3 max-w-[1450px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start w-full">
+            {/* Left HUD: Player Ledger */}
+            <aside className="lg:col-span-3 order-2 lg:order-1">
+              <PlayerLedger
+                game={game}
+                myPlayerId={playerId}
+                onOpenExplorer={() => setShowExplorer(true)}
+              />
+            </aside>
 
-          {/* Center: 40-Space Monopoly Board */}
-          <section className="lg:col-span-6 order-1 lg:order-2 flex justify-center">
-            <MonopolyBoard
-              game={game}
-              myPlayerId={playerId}
-              onInspectSpace={(spaceId) => setInspectedSpaceId(spaceId)}
-              onRollDice={() => sendAction("ROLL_DICE")}
-              onBuyProperty={(spaceId) => sendAction("BUY_PROPERTY", { space_id: spaceId })}
-              onDeclineBuy={(spaceId) => sendAction("DECLINE_BUY", { space_id: spaceId })}
-              onPayBail={() => sendAction("PAY_JAIL_BAIL")}
-              onUseJailCard={() => sendAction("USE_JAIL_CARD")}
-              onEndTurn={() => sendAction("END_TURN")}
-              onOpenPortfolio={() => setShowPortfolio(true)}
-            />
-          </section>
+            {/* Center: 40-Space Monopoly Board */}
+            <section className="lg:col-span-6 order-1 lg:order-2 flex justify-center">
+              <MonopolyBoard
+                game={game}
+                myPlayerId={playerId}
+                onInspectSpace={(spaceId) => setInspectedSpaceId(spaceId)}
+                onRollDice={() => sendAction("ROLL_DICE")}
+                onBuyProperty={(spaceId) => sendAction("BUY_PROPERTY", { space_id: spaceId })}
+                onDeclineBuy={(spaceId) => sendAction("DECLINE_BUY", { space_id: spaceId })}
+                onPayBail={() => sendAction("PAY_JAIL_BAIL")}
+                onUseJailCard={() => sendAction("USE_JAIL_CARD")}
+                onEndTurn={() => sendAction("END_TURN")}
+                onOpenPortfolio={() => setShowPortfolio(true)}
+              />
+            </section>
 
-          {/* Right HUD: Activity Stream */}
-          <aside className="lg:col-span-3 order-3">
-            <GameLogs logs={game.logs} />
-          </aside>
+            {/* Right HUD: Activity Stream */}
+            <aside className="lg:col-span-3 order-3">
+              <GameLogs logs={game.logs} />
+            </aside>
+          </div>
+
+          {/* Bottom Property Rack: What You Bought */}
+          <PropertyRack
+            game={game}
+            myPlayerId={playerId}
+            onInspectSpace={(spaceId) => setInspectedSpaceId(spaceId)}
+            onBuildHouse={(spaceId) => sendAction("BUILD_BHAVAN", { space_id: spaceId })}
+            onBuildHotel={(spaceId) => sendAction("BUILD_MAHAL", { space_id: spaceId })}
+          />
         </main>
       )}
 
       {/* Footer Branding */}
       <footer className="mt-2 text-center text-[10px] text-slate-500 py-1">
-        Indian Monopoly: Cities & Monuments • Hasbro-compliant Game Rules & Mathematics
+        Indian Monopoly: Cities & Monuments • Official Hasbro Rules & Victory Mechanics
       </footer>
 
       {/* Overlays and Modals */}
@@ -216,6 +241,14 @@ export default function GameRoomPage() {
           onBuildMahal={(spaceId) => sendAction("BUILD_MAHAL", { space_id: spaceId })}
           onMortgage={(spaceId) => sendAction("MORTGAGE_PROPERTY", { space_id: spaceId })}
           onUnmortgage={(spaceId) => sendAction("UNMORTGAGE_PROPERTY", { space_id: spaceId })}
+        />
+      )}
+
+      {showExplorer && (
+        <CityExplorerModal
+          game={game}
+          onInspectSpace={(spaceId) => { setInspectedSpaceId(spaceId); }}
+          onClose={() => setShowExplorer(false)}
         />
       )}
 
